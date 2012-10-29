@@ -7,6 +7,8 @@ I've installed those in my home directory and it works well.
 
 # Plugins
 
+At the top of the plugins, the load path is altered to search for helper files in the same directory as the plugin, and in the standard plugin directory (if the `MUNIN_LIBDIR` environment variable is set).
+
 ## resque_queues
 
 A graph with a line for the total number of pending jobs, and a line for each queue.
