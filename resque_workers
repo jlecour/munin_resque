@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+$:.unshift "#{ENV['MUNIN_LIBDIR']}/plugins" if ENV['MUNIN_LIBDIR']
+$:.unshift File.dirname(__FILE__)
+
+require "plugin"
+require "resque"
+
+def output_values
+  puts "workers.value #{stats['resque']['workers']}"
+  puts "working.value #{stats['resque']['working']}"
+end
+
+def output_config
+  puts <<-END
+graph_category BackgroundJobs
+graph_title Resque workers
+graph_vlabel Workers
+workers.label total workers
+working.label active workers
+END
+  exit 0
+end
+
+if ARGV[0] == "config"
+  output_config
+else
+  output_values
+end

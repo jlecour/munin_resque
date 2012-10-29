@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+$:.unshift "#{ENV['MUNIN_LIBDIR']}/plugins" if ENV['MUNIN_LIBDIR']
+$:.unshift File.dirname(__FILE__)
+
+require "plugin"
+require "resque"
+
+def workers
+  stats['resque']['workers'].to_i
+end
+def pending_warning
+  workers * 1.5
+end
+def pending_critical
+  workers * 3
+end
+
+def output_values
+  stats['queues'].each { |name, value|
+    puts "queue_#{clean_fieldname(name)}.value #{value}";
+  }
+  puts "pending.value #{stats['resque']['pending']}"
+end
+
+def output_config
+  puts "graph_category BackgroundJobs"
+  puts "graph_title Resque queues"
+  puts "graph_vlabel Queues"
+  stats['queues'].each { |name, value|
+    puts "queue_#{clean_fieldname(name)}.label #{name}";
+  }
+  puts "pending.label pending jobs"
+  puts "pending.warning #{pending_warning}"
+  puts "pending.critical #{pending_critical}"
+  exit 0
+end
+
+if ARGV[0] == "config"
+  output_config
+else
+  output_values
+end
