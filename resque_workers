@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby
 
+require 'pathname'
+
 $:.unshift "#{ENV['MUNIN_LIBDIR']}/plugins" if ENV['MUNIN_LIBDIR']
-$:.unshift File.dirname(__FILE__)
+$:.unshift Pathname.new(__FILE__).realpath.dirname.to_s
 
 require "plugin"
 require "resque"
