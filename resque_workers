@@ -16,10 +16,17 @@ end
 def output_config
   puts <<-END
 graph_category BackgroundJobs
-graph_title Resque workers
+graph_title Resque workers pending
 graph_vlabel Workers
+graph_order workers working
 workers.label total workers
+workers.type GAUGE
+workers.draw AREA
+workers.colour ccff00
 working.label active workers
+working.type GAUGE
+working.draw AREA
+working.colour 0033ff
 END
   exit 0
 end
