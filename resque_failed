@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'pathname'
+
+$:.unshift "#{ENV['MUNIN_LIBDIR']}/plugins" if ENV['MUNIN_LIBDIR']
+$:.unshift Pathname.new(__FILE__).realpath.dirname.to_s
+
+require "plugin"
+require "resque"
+
+def output_values
+  puts "failed.value #{stats['resque']['failed+']}"
+end
+
+def output_config
+  puts <<-END
+graph_category BackgroundJobs
+graph_title Resque failed jobs
+graph_vlabel Failed jobs
+failed.label failed jobs
+failed.type GAUGE
+failed.min 0
+failed.colour 990000
+END
+  exit 0
+end
+
+if ARGV[0] == "config"
+  output_config
+else
+  output_values
+end
